@@ -18,6 +18,9 @@ test = ["pytest>=7", "jsonschema>=4"]
 
 [project.urls]
 Homepage = "https://riskdatascience.net"
+Repository = "https://github.com/rds0001/euaiact-python"
+Issues = "https://github.com/rds0001/euaiact-python/issues"
+Documentation = "https://github.com/rds0001/euaiact-python/blob/main/docs/API.md"
 
 [tool.setuptools.packages.find]
 where = ["src"]

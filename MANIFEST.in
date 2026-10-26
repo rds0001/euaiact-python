@@ -1,4 +1,4 @@
-include LICENSE NOTICE README.md pyproject.toml
+include LICENSE NOTICE README.md CHANGELOG.md pyproject.toml
 recursive-include src/euaiact/resources *.json
 recursive-include tests *.py *.json
 recursive-include docs *.md

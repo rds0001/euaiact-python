@@ -5,6 +5,7 @@ All package installations use --no-index; Linux runtime checks use seccomp.
 """
 
 import argparse
+import hashlib
 import os
 from pathlib import Path
 import shutil
@@ -19,7 +20,17 @@ def main():
     parser.add_argument(
         "--test-filter", help="Local targeted validation; CI omits this"
     )
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        help="Export the exact verified wheel/sdist plus SHA256SUMS",
+    )
     args = parser.parse_args()
+    if args.output_dir is not None and args.test_filter:
+        parser.error("Export requires the complete test suite, without --test-filter")
+    destination = args.output_dir.absolute() if args.output_dir is not None else None
+    if destination is not None and destination.exists():
+        parser.error("Export destination must not exist")
     root = Path(__file__).resolve().parents[1]
     env = dict(os.environ)
     env.pop("PYTHONPATH", None)
@@ -116,6 +127,19 @@ def main():
                 command += ["-k", args.test_filter]
             run(command, checks, runtime=True)
             run([python, "examples/unternehmen.py"], checks, runtime=True)
+        if destination is not None:
+            destination.mkdir(parents=True, exist_ok=False)
+            lines = []
+            for artifact in (wheel, sdist):
+                target = destination / artifact.name
+                shutil.copy2(artifact, target)
+                digest = hashlib.sha256(artifact.read_bytes()).hexdigest()
+                if hashlib.sha256(target.read_bytes()).hexdigest() != digest:
+                    raise RuntimeError("Artifact changed during export")
+                lines.append(digest + "  " + artifact.name)
+            (destination / "SHA256SUMS").write_text(
+                "\n".join(lines) + "\n", encoding="utf-8"
+            )
         print("Installed wheel and sdist checks passed")
 
 

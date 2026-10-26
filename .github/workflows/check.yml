@@ -30,4 +30,4 @@ jobs:
       - name: Prepare build and test tools
         run: python -m pip install build setuptools wheel twine pytest jsonschema
       - name: Check independent installed wheel and sdist
-        run: python tools/check_distributions.py
+        run: python tools/check_distributions.py --output-dir "${{ runner.temp }}/euaiact-verified-dist"
