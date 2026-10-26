@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "euaiact"
+version = "0.1.0"
+description = "Offline calculation and logic rules for the EU Artificial Intelligence Act"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "Apache-2.0"}
+authors = [{name = "Dr. Dimitrios Geromichalos", email = "riskdatascience@web.de"}]
+maintainers = [{name = "Dr. Dimitrios Geromichalos", email = "riskdatascience@web.de"}]
+dependencies = []
+
+[project.optional-dependencies]
+test = ["pytest>=7", "jsonschema>=4"]
+
+[project.urls]
+Homepage = "https://riskdatascience.net"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+euaiact = ["resources/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q"
